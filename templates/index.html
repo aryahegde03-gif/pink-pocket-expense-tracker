@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pink Pocket — Expense Tracker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- ── Sidebar ───────────────────────────── -->
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-icon">⚜</span>
+      <span class="logo-text">Pink Pocket</span>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" data-section="dashboard">
+        <span class="nav-icon">◈</span> Dashboard
+      </button>
+      <button class="nav-btn" data-section="add">
+        <span class="nav-icon">＋</span> Add Expense
+      </button>
+      <button class="nav-btn" data-section="expenses">
+        <span class="nav-icon">≡</span> All Expenses
+      </button>
+      <button class="nav-btn" data-section="analytics">
+        <span class="nav-icon">◎</span> Analytics
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <p>Every rupee, safely tucked<br/> in your Pink Pocket.</p>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ──────────────────────── -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="section active">
+      <header class="section-header">
+        <h1>Hello! Let’s track your spending <span class="accent">💸</span></h1>
+        <p class="subtitle">Your spending at a glance.</p>
+      </header>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-primary">
+          <p class="kpi-label">Total Spent</p>
+          <p class="kpi-value" id="kpi-total">₹0.00</p>
+          <span class="kpi-tag">All time</span>
+        </div>
+        <div class="kpi-card">
+          <p class="kpi-label">This Month</p>
+          <p class="kpi-value" id="kpi-month">₹0.00</p>
+          <span class="kpi-tag">Current</span>
+        </div>
+        <div class="kpi-card">
+          <p class="kpi-label">Avg. Expense</p>
+          <p class="kpi-value" id="kpi-avg">₹0.00</p>
+          <span class="kpi-tag">Per entry</span>
+        </div>
+        <div class="kpi-card">
+          <p class="kpi-label">Top Category</p>
+          <p class="kpi-value kpi-cat" id="kpi-top">—</p>
+          <span class="kpi-tag">Highest spend</span>
+        </div>
+      </div>
+
+      <!-- Recent + Mini Chart -->
+      <div class="dash-bottom">
+        <div class="recent-box">
+          <h2>Recent Expenses</h2>
+          <ul id="recent-list" class="recent-list">
+            <li class="empty-state">No expenses yet.</li>
+          </ul>
+        </div>
+        <div class="mini-chart-box">
+          <h2>Category Split</h2>
+          <canvas id="miniPieChart"></canvas>
+          <p id="mini-empty" class="empty-state hidden">No data yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADD EXPENSE -->
+    <section id="add" class="section">
+      <header class="section-header">
+        <h1>Add Expense <span class="accent">✰</span></h1>
+        <p class="subtitle">Record a new transaction.</p>
+      </header>
+
+      <div class="form-card">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="amount">Amount (₹)</label>
+            <input type="number" id="amount" placeholder="0.00" min="0" step="0.01"/>
+          </div>
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category">
+              <option value="">Select category…</option>
+              <option>Food</option>
+              <option>Transport</option>
+              <option>Shopping</option>
+              <option>Health</option>
+              <option>Entertainment</option>
+              <option>Utilities</option>
+              <option>Education</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label for="description">Description</label>
+            <input type="text" id="description" placeholder="What was this for?"/>
+          </div>
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date"/>
+          </div>
+        </div>
+        <button class="btn-primary" id="addBtn">Add Expense</button>
+        <p id="form-msg" class="form-msg hidden"></p>
+      </div>
+    </section>
+
+    <!-- ALL EXPENSES -->
+    <section id="expenses" class="section">
+      <header class="section-header">
+        <h1>All Expenses <span class="accent">✰</span></h1>
+        <p class="subtitle">Your complete spending log.</p>
+      </header>
+
+      <div class="filter-bar">
+        <input type="text" id="search" placeholder="Search description…"/>
+        <select id="filter-cat">
+          <option value="">All Categories</option>
+          <option>Food</option>
+          <option>Transport</option>
+          <option>Shopping</option>
+          <option>Health</option>
+          <option>Entertainment</option>
+          <option>Utilities</option>
+          <option>Education</option>
+          <option>Other</option>
+        </select>
+        <button class="btn-outline" id="filterBtn">Filter</button>
+        <button class="btn-ghost" id="clearBtn">Clear</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="expense-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="expense-tbody">
+            <tr><td colspan="5" class="empty-state">No expenses found.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section id="analytics" class="section">
+      <header class="section-header">
+        <h1>Analytics <span class="accent">✨</span></h1>
+        <p class="subtitle">Understand your spending patterns.</p>
+      </header>
+
+      <div class="chart-grid">
+        <div class="chart-card wide">
+          <h2>Monthly Spending</h2>
+          <canvas id="monthlyChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h2>By Category</h2>
+          <canvas id="categoryChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h2>Category Breakdown</h2>
+          <div id="cat-breakdown" class="cat-breakdown"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+<div class="contact-bubble">
+    <span class="contact-label">Contact Me</span>
+    <a href="https://www.linkedin.com/in/arya-hegde-600969311" target="_blank" rel="noopener noreferrer" class="linkedin-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+      Arya Hegde
+    </a>
+  </div>
+
+  <script src="{{ url_for('static', filename='chart.js') }}"></script>
+</body>
+</html>

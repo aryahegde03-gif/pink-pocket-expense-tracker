@@ -3,29 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bloom — Expense Tracker</title>
+  <title>Pink Pocket — Expense Tracker</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-  <!-- ── Hamburger Toggle ─────────────────── -->
-  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">
-    <span></span><span></span><span></span>
-  </button>
-
-  <!-- ── Overlay (mobile) ──────────────────── -->
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
   <!-- ── Sidebar ───────────────────────────── -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-top">
-      <div class="logo">
-        <span class="logo-icon">✿</span>
-        <span class="logo-text">Bloom</span>
-      </div>
-      <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-icon">⚜</span>
+      <span class="logo-text">Pink Pocket</span>
     </div>
     <nav class="nav">
       <button class="nav-btn active" data-section="dashboard">
@@ -42,7 +31,7 @@
       </button>
     </nav>
     <div class="sidebar-footer">
-      <p>Track every petal<br/>of your spending.</p>
+      <p>Every rupee, safely tucked<br/> in your Pink Pocket.</p>
     </div>
   </aside>
 
@@ -52,8 +41,8 @@
     <!-- DASHBOARD -->
     <section id="dashboard" class="section active">
       <header class="section-header">
-        <h1>Good day <span class="accent">✦</span></h1>
-        <p class="subtitle">Here's your financial bloom.</p>
+        <h1>Hello! Let’s track your spending <span class="accent">💸</span></h1>
+        <p class="subtitle">Your spending at a glance.</p>
       </header>
 
       <!-- KPI Cards -->
@@ -99,7 +88,7 @@
     <!-- ADD EXPENSE -->
     <section id="add" class="section">
       <header class="section-header">
-        <h1>Add Expense <span class="accent">✦</span></h1>
+        <h1>Add Expense <span class="accent">✰</span></h1>
         <p class="subtitle">Record a new transaction.</p>
       </header>
 
@@ -140,7 +129,7 @@
     <!-- ALL EXPENSES -->
     <section id="expenses" class="section">
       <header class="section-header">
-        <h1>All Expenses <span class="accent">✦</span></h1>
+        <h1>All Expenses <span class="accent">✰</span></h1>
         <p class="subtitle">Your complete spending log.</p>
       </header>
 
@@ -182,7 +171,7 @@
     <!-- ANALYTICS -->
     <section id="analytics" class="section">
       <header class="section-header">
-        <h1>Analytics <span class="accent">✦</span></h1>
+        <h1>Analytics <span class="accent">✨</span></h1>
         <p class="subtitle">Understand your spending patterns.</p>
       </header>
 
@@ -203,9 +192,7 @@
     </section>
 
   </main>
-
-  <!-- ── Contact Me ───────────────────────── -->
-  <div class="contact-bubble">
+<div class="contact-bubble">
     <span class="contact-label">Contact Me</span>
     <a href="https://www.linkedin.com/in/arya-hegde-600969311" target="_blank" rel="noopener noreferrer" class="linkedin-btn">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

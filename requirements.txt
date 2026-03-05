@@ -8,3 +8,4 @@ Flask-SQLAlchemy==3.1.1
 mysql-connector-python==8.3.0
 python-dotenv==1.0.1
 pandas==2.2.1
+gunicorn

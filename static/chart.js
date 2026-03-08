@@ -1,5 +1,54 @@
 /* ── Bloom Expense Tracker — Frontend Logic ── */
 
+/* ── Sidebar Toggle ──────────────────────── */
+const sidebar        = document.getElementById('sidebar');
+const sidebarToggle  = document.getElementById('sidebarToggle');
+const sidebarClose   = document.getElementById('sidebarClose');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const mainEl         = document.getElementById('mainContent');
+
+const isMobile = () => window.innerWidth <= 768;
+
+function openSidebar() {
+  sidebar.classList.remove('collapsed');
+  sidebar.classList.add('open');
+  sidebarOverlay.classList.add('active');
+  if (!isMobile()) mainEl.classList.remove('expanded');
+}
+
+function closeSidebar() {
+  sidebar.classList.add('collapsed');
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('active');
+  if (!isMobile()) mainEl.classList.add('expanded');
+}
+
+sidebarToggle.addEventListener('click', () => {
+  const isOpen = sidebar.classList.contains('open') ||
+    (!isMobile() && !sidebar.classList.contains('collapsed'));
+  isOpen ? closeSidebar() : openSidebar();
+});
+
+sidebarClose.addEventListener('click', closeSidebar);
+sidebarOverlay.addEventListener('click', closeSidebar);
+
+// Mobile: start closed. Desktop: start open.
+if (isMobile()) {
+  sidebar.classList.add('collapsed');
+} else {
+  sidebar.classList.add('open');
+}
+
+window.addEventListener('resize', () => {
+  if (!isMobile()) {
+    sidebarOverlay.classList.remove('active');
+    if (!sidebar.classList.contains('collapsed')) {
+      mainEl.classList.remove('expanded');
+    }
+  }
+});
+
+/* ── Pink palette ────────────────────────── */
 const PINK = {
   primary:  '#eb2f96',
   light:    '#ff85be',
@@ -24,6 +73,9 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     if (btn.dataset.section === 'dashboard')  loadDashboard();
     if (btn.dataset.section === 'expenses')   loadExpenses();
     if (btn.dataset.section === 'analytics')  loadAnalytics();
+
+    // Auto-close sidebar on mobile after navigation
+    if (isMobile()) closeSidebar();
   });
 });
 
@@ -88,7 +140,6 @@ async function loadDashboard() {
     document.getElementById('kpi-avg').textContent   = fmt(overview.average_expense);
     document.getElementById('kpi-top').textContent   = overview.top_category || '—';
 
-    // Recent list (last 6)
     const list = document.getElementById('recent-list');
     const recent = expenses.slice(0, 6);
     if (recent.length === 0) {
@@ -103,7 +154,6 @@ async function loadDashboard() {
       `).join('');
     }
 
-    // Mini Pie
     renderMiniPie(catData);
   } catch(err) { console.error('Dashboard load error:', err); }
 }
@@ -300,6 +350,7 @@ function renderBreakdown(data) {
 /* ── Init ────────────────────────────────── */
 loadDashboard();
 
+/* ── Click Spark Effect ──────────────────── */
 (function () {
   const canvas = document.createElement('canvas');
   Object.assign(canvas.style, {
@@ -314,13 +365,11 @@ loadDashboard();
   document.body.appendChild(canvas);
 
   const ctx = canvas.getContext('2d');
-
-  // Config — tweak these to match your taste
-  const SPARK_COLOR  = '#eb2f96';   // pink to match the theme
+  const SPARK_COLOR  = '#eb2f96';
   const SPARK_COUNT  = 8;
   const SPARK_SIZE   = 10;
   const SPARK_RADIUS = 20;
-  const DURATION     = 450;         // ms
+  const DURATION     = 450;
 
   let sparks = [];
 
@@ -335,21 +384,17 @@ loadDashboard();
 
   function draw(timestamp) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     sparks = sparks.filter(spark => {
       const elapsed  = timestamp - spark.startTime;
       if (elapsed >= DURATION) return false;
-
       const progress = elapsed / DURATION;
       const eased    = easeOut(progress);
       const distance = eased * SPARK_RADIUS;
       const lineLen  = SPARK_SIZE * (1 - eased);
-
       const x1 = spark.x + distance * Math.cos(spark.angle);
       const y1 = spark.y + distance * Math.sin(spark.angle);
       const x2 = spark.x + (distance + lineLen) * Math.cos(spark.angle);
       const y2 = spark.y + (distance + lineLen) * Math.sin(spark.angle);
-
       ctx.globalAlpha = 1 - progress;
       ctx.strokeStyle = SPARK_COLOR;
       ctx.lineWidth   = 2;
@@ -358,10 +403,8 @@ loadDashboard();
       ctx.lineTo(x2, y2);
       ctx.stroke();
       ctx.globalAlpha = 1;
-
       return true;
     });
-
     requestAnimationFrame(draw);
   }
   requestAnimationFrame(draw);
@@ -370,9 +413,8 @@ loadDashboard();
     const now = performance.now();
     for (let i = 0; i < SPARK_COUNT; i++) {
       sparks.push({
-        x:         e.clientX,
-        y:         e.clientY,
-        angle:     (2 * Math.PI * i) / SPARK_COUNT,
+        x: e.clientX, y: e.clientY,
+        angle: (2 * Math.PI * i) / SPARK_COUNT,
         startTime: now
       });
     }
